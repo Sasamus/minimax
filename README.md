@@ -1,0 +1,2 @@
+# minimax
+A minimax algorithm
