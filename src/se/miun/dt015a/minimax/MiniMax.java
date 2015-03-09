@@ -9,9 +9,11 @@ import java.util.ArrayList;
  */
 public class MiniMax<State, Action> {
 
+	@SuppressWarnings("rawtypes")
 	Game game;
 	
 	public Action getAction(Game<State, Action> game, State state) {
+		
 		this.game = game;
 		
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game.getSuccessors(state);
@@ -25,6 +27,7 @@ public class MiniMax<State, Action> {
 		return null; // Your code here.
 	}
 
+	@SuppressWarnings("unchecked")
 	State getMaxValue(State state) {
 		
 		if(game.isTerminal(state)){
@@ -33,10 +36,49 @@ public class MiniMax<State, Action> {
 		
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game.getSuccessors(state);
 		
+		State maxState = null;
+		State tmpMaxState = null; 
+
+		//TODO: Potential comparing null problems?
+		
 		for(Successor<State, Action> successor : successors){
 			
-			getMinValue(successor.state);
+			tmpMaxState = getMinValue(successor.state);
+			
+			if(game.getUtility(tmpMaxState) > game.getUtility(maxState)){
+				
+				maxState = tmpMaxState;
+			}
 		}
+		
+		return maxState;
+	}
+	
+	@SuppressWarnings("unchecked")
+	State getMinValue(State state) {
+		
+		if(game.isTerminal(state)){
+			return state;
+		}
+		
+		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game.getSuccessors(state);
+		
+		State minState = null;
+		State tmpMinState = null; 
+
+		//TODO: Potential comparing null problems?
+		
+		for(Successor<State, Action> successor : successors){
+			
+			tmpMinState = getMinValue(successor.state);
+			
+			if(game.getUtility(tmpMinState) < game.getUtility(minState)){
+				
+				minState = tmpMinState;
+			}
+		}
+		
+		return minState;
 	}
 
 }
