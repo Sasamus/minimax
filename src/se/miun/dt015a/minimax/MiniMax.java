@@ -19,107 +19,102 @@ public class MiniMax<State, Action> {
 		// Sets game to game
 		this.game = game;
 
-		// Gets a List of the successsors from game
-		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
-				.getSuccessors(state);
+		Successor<State, Action> firstSuccessor = new Successor<State, Action>(state, null);
+		
+		// Call getMaxValue with state
+		Successor<State, Action> successor = getMaxValue(firstSuccessor);
 
-		// Iterate through the successors
-		for (Successor<State, Action> successor : successors) {
 
-			// Call getMaxValoue with successors.state
-			getMaxValue(successor.state);
-		}
-
-		// TODO: Return Action here
-		return null; // Your code here.
+		return successor.action;
 	}
 
 	@SuppressWarnings("unchecked")
-	State getMaxValue(State state) {
+	Successor<State, Action> getMaxValue(Successor<State, Action> successor) {
 
 		// Check if state is a terminal one
-		if (game.isTerminal(state)) {
+		if (game.isTerminal(successor.state)) {
 
 			// If so, return state
-			return state;
+			return successor;
 		}
 
 		// Get a List of successors from game
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
-				.getSuccessors(state);
+				.getSuccessors(successor.state);
 
-		// Variables to keep track of max states
-		State maxState = null;
-		State tmpMaxState = null;
+		// Variables to keep track of max successors
+		Successor<State, Action> maxSuccessor = null;
+		Successor<State, Action> tmpMaxSuccesor = null;
 
 		// TODO: Potential comparing null problems?
 
 		// Iterate through successors
-		for (Successor<State, Action> successor : successors) {
+		for (Successor<State, Action> tmpSuccessor : successors) {
 
 			// Call getMinValue on state
-			tmpMaxState = getMinValue(successor.state);
+			tmpMaxSuccesor = getMinValue(tmpSuccessor);
 
 			// Check if maxState equals null
-			if (maxState == null) {
+			if (maxSuccessor == null) {
 
 				// Set maxState
-				maxState = tmpMaxState;
+				maxSuccessor = tmpMaxSuccesor;
 			}
 			// Check if tmpMaxState have more utility than maxState
-			else if (game.getUtility(tmpMaxState) > game.getUtility(maxState)) {
+			else if (game.getUtility(tmpMaxSuccesor) > game
+					.getUtility(maxSuccessor)) {
 
 				// If so, update maxState with tmpMaxState
-				maxState = tmpMaxState;
+				maxSuccessor = tmpMaxSuccesor;
 			}
 		}
 
-		// Return maxState
-		return maxState;
+		// Return maxSuccessor
+		return maxSuccessor;
 	}
 
 	@SuppressWarnings("unchecked")
-	State getMinValue(State state) {
+	Successor<State, Action> getMinValue(Successor<State, Action> successor) {
 
 		// Check if state is a terminal one
-		if (game.isTerminal(state)) {
+		if (game.isTerminal(successor.state)) {
 
 			// If so, return state
-			return state;
+			return successor;
 		}
 
 		// Get a List of successors from game
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
-				.getSuccessors(state);
+				.getSuccessors(successor.state);
 
-		// Variables to keep track of min states
-		State minState = null;
-		State tmpMinState = null;
+		// Variables to keep track of min successors
+		Successor<State, Action> minSuccessor = null;
+		Successor<State, Action> tmpMinSuccessor = null;
 
 		// TODO: Potential comparing null problems?
 
 		// Iterate through successors
-		for (Successor<State, Action> successor : successors) {
+		for (Successor<State, Action> tmpSuccessor : successors) {
 
 			// Call getMaxValue on state
-			tmpMinState = getMaxValue(successor.state);
+			tmpMinSuccessor = getMaxValue(tmpSuccessor);
 
 			// Check if minState equals null
-			if (minState == null) {
+			if (minSuccessor == null) {
 
 				// Set minState
-				minState = tmpMinState;
+				minSuccessor = tmpMinSuccessor;
 			}
 			// Check if tmpMaxState have less utility than maxState
-			else if (game.getUtility(tmpMinState) < game.getUtility(minState)) {
+			else if (game.getUtility(tmpMinSuccessor) < game.getUtility(minSuccessor)) {
 
 				// If so, update minState with tmpMinState
-				minState = tmpMinState;
+				minSuccessor = tmpMinSuccessor;
 			}
 		}
 
-		// Return minState
-		return minState;
+		// Return minSuccessor
+		return minSuccessor;
 	}
 
 }
