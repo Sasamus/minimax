@@ -13,6 +13,8 @@ public class MiniMax<State, Action> {
 	Game game;
 
 	public Action getAction(Game<State, Action> game, State state) {
+		
+		//TODO: Pruning
 
 		// Sets game to game
 		this.game = game;
