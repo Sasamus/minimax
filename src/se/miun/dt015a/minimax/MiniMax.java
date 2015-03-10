@@ -19,11 +19,11 @@ public class MiniMax<State, Action> {
 		// Sets game to game
 		this.game = game;
 
-		Successor<State, Action> firstSuccessor = new Successor<State, Action>(state, null);
-		
+		Successor<State, Action> firstSuccessor = new Successor<State, Action>(
+				state, null);
+
 		// Call getMaxValue with state
 		Successor<State, Action> successor = getMaxValue(firstSuccessor);
-
 
 		return successor.action;
 	}
@@ -46,8 +46,6 @@ public class MiniMax<State, Action> {
 		Successor<State, Action> maxSuccessor = null;
 		Successor<State, Action> tmpMaxSuccesor = null;
 
-		// TODO: Potential comparing null problems?
-
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
 
@@ -61,8 +59,8 @@ public class MiniMax<State, Action> {
 				maxSuccessor = tmpMaxSuccesor;
 			}
 			// Check if tmpMaxState have more utility than maxState
-			else if (game.getUtility(tmpMaxSuccesor) > game
-					.getUtility(maxSuccessor)) {
+			else if (game.getUtility(tmpMaxSuccesor.state) > game
+					.getUtility(maxSuccessor.state)) {
 
 				// If so, update maxState with tmpMaxState
 				maxSuccessor = tmpMaxSuccesor;
@@ -91,8 +89,6 @@ public class MiniMax<State, Action> {
 		Successor<State, Action> minSuccessor = null;
 		Successor<State, Action> tmpMinSuccessor = null;
 
-		// TODO: Potential comparing null problems?
-
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
 
@@ -106,7 +102,8 @@ public class MiniMax<State, Action> {
 				minSuccessor = tmpMinSuccessor;
 			}
 			// Check if tmpMaxState have less utility than maxState
-			else if (game.getUtility(tmpMinSuccessor) < game.getUtility(minSuccessor)) {
+			else if (game.getUtility(tmpMinSuccessor.state) < game
+					.getUtility(minSuccessor.state)) {
 
 				// If so, update minState with tmpMinState
 				minSuccessor = tmpMinSuccessor;
