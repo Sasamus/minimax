@@ -13,8 +13,8 @@ public class MiniMax<State, Action> {
 	Game game;
 
 	public Action getAction(Game<State, Action> game, State state) {
-		
-		//TODO: Pruning
+
+		// TODO: Pruning
 
 		// Sets game to game
 		this.game = game;
@@ -60,8 +60,14 @@ public class MiniMax<State, Action> {
 			// Call getMinValue on state
 			tmpMaxState = getMinValue(successor.state);
 
+			// Check if maxState equals null
+			if (maxState == null) {
+
+				// Set maxState
+				maxState = tmpMaxState;
+			}
 			// Check if tmpMaxState have more utility than maxState
-			if (game.getUtility(tmpMaxState) > game.getUtility(maxState)) {
+			else if (game.getUtility(tmpMaxState) > game.getUtility(maxState)) {
 
 				// If so, update maxState with tmpMaxState
 				maxState = tmpMaxState;
@@ -98,8 +104,14 @@ public class MiniMax<State, Action> {
 			// Call getMaxValue on state
 			tmpMinState = getMaxValue(successor.state);
 
+			// Check if minState equals null
+			if (minState == null) {
+
+				// Set minState
+				minState = tmpMinState;
+			}
 			// Check if tmpMaxState have less utility than maxState
-			if (game.getUtility(tmpMinState) < game.getUtility(minState)) {
+			else if (game.getUtility(tmpMinState) < game.getUtility(minState)) {
 
 				// If so, update minState with tmpMinState
 				minState = tmpMinState;
