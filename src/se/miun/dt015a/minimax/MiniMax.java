@@ -24,7 +24,7 @@ public class MiniMax<State, Action> {
 				state, null);
 
 		// Call getMaxValue with firstSuccessor
-		Successor<State, Action> successor = getMaxValue(firstSuccessor, null);
+		Successor<State, Action> successor = getMinValue(firstSuccessor, null);
 
 		// Return successor.action
 		return successor.action;
@@ -55,8 +55,9 @@ public class MiniMax<State, Action> {
 			// Check if maxSuccessor equals null
 			if (maxSuccessor == null) {
 
-				// Set maxSuccessor
+				// Set maxSuccessor and tmpMaxSuccessor
 				maxSuccessor = tmpSuccessor;
+				tmpMaxSuccessor = tmpSuccessor;
 			}
 
 			if (currentChoice != null) {
@@ -114,8 +115,9 @@ public class MiniMax<State, Action> {
 			// Check if minSuccessor equals null
 			if (minSuccessor == null) {
 
-				// Set minSuccessor
+				// Set minSuccessor and tmpMinSuccessor
 				minSuccessor = tmpSuccessor;
+				tmpMinSuccessor = tmpSuccessor;
 			}
 
 			if (currentChoice != null) {
