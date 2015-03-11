@@ -23,8 +23,6 @@ public class MiniMax<State, Action> {
 	 */
 	public Action getAction(Game<State, Action> game, State state) {
 
-		// TODO: Pruning
-
 		// Sets game to game
 		this.game = game;
 
@@ -33,7 +31,7 @@ public class MiniMax<State, Action> {
 				state, null);
 
 		// Call getMaxValue with firstSuccessor
-		Successor<State, Action> successor = getMinValue(firstSuccessor, null);
+		Successor<State, Action> successor = getMaxValue(firstSuccessor, null);
 
 		// Return successor.action
 		return successor.action;
@@ -69,7 +67,7 @@ public class MiniMax<State, Action> {
 
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
-
+			
 			// Check if maxSuccessor equals null
 			if (maxSuccessor == null) {
 
