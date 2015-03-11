@@ -60,7 +60,9 @@ public class MiniMax<State, Action> {
 				tmpMaxSuccessor = tmpSuccessor;
 			}
 
+			// Check if currentChoice is null
 			if (currentChoice != null) {
+
 				// Check if the rest of the successors should be pruned
 				if (game.getUtility(maxSuccessor.state) > game
 						.getUtility(currentChoice.state)) {
@@ -120,7 +122,9 @@ public class MiniMax<State, Action> {
 				tmpMinSuccessor = tmpSuccessor;
 			}
 
+			// Check if currentChoice is null
 			if (currentChoice != null) {
+
 				// Check if the rest of the successors should be pruned
 				if (game.getUtility(minSuccessor.state) < game
 						.getUtility(currentChoice.state)) {
