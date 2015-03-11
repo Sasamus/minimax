@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MiniMax<State, Action> {
 
 	@SuppressWarnings("rawtypes")
-	Game game;
+	private Game game;
 
 	public Action getAction(Game<State, Action> game, State state) {
 
@@ -23,13 +23,8 @@ public class MiniMax<State, Action> {
 		Successor<State, Action> firstSuccessor = new Successor<State, Action>(
 				state, null);
 
-		// Create a successor that isn't actually one to be the first choice
-		Successor<State, Action> choiceSuccessor = new Successor<State, Action>(
-				null, null);
-
-		// Call getMaxValue with state
-		Successor<State, Action> successor = getMaxValue(firstSuccessor,
-				choiceSuccessor);
+		// Call getMaxValue with firstSuccessor
+		Successor<State, Action> successor = getMaxValue(firstSuccessor, null);
 
 		// Return successor.action
 		return successor.action;
@@ -64,22 +59,30 @@ public class MiniMax<State, Action> {
 				maxSuccessor = tmpSuccessor;
 			}
 
-			// Call getMinValue on tmpSuccessor
-			tmpMaxSuccessor = getMinValue(tmpSuccessor, maxSuccessor);
+			if (currentChoice != null) {
+				// Check if the rest of the successors should be pruned
+				if (game.getUtility(maxSuccessor.state) > game
+						.getUtility(currentChoice.state)) {
 
-			// Check if tmpMaxSuccessor have more utility than maxSuccessor
-			if (game.getUtility(tmpMaxSuccessor.state) > game
-					.getUtility(maxSuccessor.state)) {
-
-				// If so, update maxState with tmpMaxState
-				maxSuccessor = tmpMaxSuccessor;
+					break;
+				}
 			}
 
-			// Check if the rest of the sucessors should be pruned
-			if (game.getUtility(maxSuccessor.state) > game
-					.getUtility(currentChoice.state)) {
-				break;
+			if (game.isTerminal(maxSuccessor.state)) {
+
+				// Check if tmpMaxSuccessor have more utility than maxSuccessor
+				if (game.getUtility(tmpMaxSuccessor.state) > game
+						.getUtility(maxSuccessor.state)) {
+
+					// If so, update maxState with tmpMaxState
+					maxSuccessor = tmpMaxSuccessor;
+				}
+			} else {
+
+				// Call getMinValue on tmpSuccessor
+				tmpMaxSuccessor = getMinValue(tmpSuccessor, null);
 			}
+
 		}
 
 		// Return maxSuccessor
@@ -115,22 +118,33 @@ public class MiniMax<State, Action> {
 				minSuccessor = tmpSuccessor;
 			}
 
-			// Call getMaxValue on tmpSuccessor
-			tmpMinSuccessor = getMaxValue(tmpSuccessor, minSuccessor);
+			if (currentChoice != null) {
+				// Check if the rest of the successors should be pruned
+				if (game.getUtility(minSuccessor.state) < game
+						.getUtility(currentChoice.state)) {
 
-			// Check if tmpMinSuccessor have less utility than minSuccessor
-			if (game.getUtility(tmpMinSuccessor.state) < game
-					.getUtility(minSuccessor.state)) {
-
-				// If so, update minSuccessor with tmpMinSuccessor
-				minSuccessor = tmpMinSuccessor;
+					break;
+				}
 			}
 
-			// Check if the rest of the sucessors should be pruned
-			if (game.getUtility(minSuccessor.state) < game
-					.getUtility(currentChoice.state)) {
-				break;
+			if (game.isTerminal(minSuccessor.state)) {
+
+				// Call getMaxValue on tmpSuccessor
+				tmpMinSuccessor = getMaxValue(tmpSuccessor, minSuccessor);
+
+				// Check if tmpMinSuccessor have less utility than minSuccessor
+				if (game.getUtility(tmpMinSuccessor.state) < game
+						.getUtility(minSuccessor.state)) {
+
+					// If so, update minSuccessor with tmpMinSuccessor
+					minSuccessor = tmpMinSuccessor;
+				}
+			} else {
+
+				// Call getMaxValue on tmpSuccessor
+				tmpMinSuccessor = getMaxValue(tmpSuccessor, null);
 			}
+
 		}
 
 		// Return minSuccessor
