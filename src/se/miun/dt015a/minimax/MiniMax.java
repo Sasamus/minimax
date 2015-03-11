@@ -12,6 +12,15 @@ public class MiniMax<State, Action> {
 	@SuppressWarnings("rawtypes")
 	private Game game;
 
+	/**
+	 * get and Action for Game in a State
+	 * 
+	 * @param game
+	 *            The Game
+	 * @param state
+	 *            The State
+	 * @return the Action
+	 */
 	public Action getAction(Game<State, Action> game, State state) {
 
 		// TODO: Pruning
@@ -30,6 +39,15 @@ public class MiniMax<State, Action> {
 		return successor.action;
 	}
 
+	/**
+	 * Get the max value for a Successor
+	 * 
+	 * @param successor
+	 *            The Successor
+	 * @param currentChoice
+	 *            The current choice
+	 * @return The Successor with max utility
+	 */
 	@SuppressWarnings("unchecked")
 	Successor<State, Action> getMaxValue(Successor<State, Action> successor,
 			Successor<State, Action> currentChoice) {
@@ -85,13 +103,21 @@ public class MiniMax<State, Action> {
 				// Call getMinValue on tmpSuccessor
 				tmpMaxSuccessor = getMinValue(tmpSuccessor, null);
 			}
-
 		}
 
 		// Return maxSuccessor
 		return maxSuccessor;
 	}
 
+	/**
+	 * Get the min value for a Successor
+	 * 
+	 * @param successor
+	 *            The Successor
+	 * @param currentChoice
+	 *            The current choice
+	 * @return The Successor with min utility
+	 */
 	@SuppressWarnings("unchecked")
 	Successor<State, Action> getMinValue(Successor<State, Action> successor,
 			Successor<State, Action> currentChoice) {
@@ -150,11 +176,9 @@ public class MiniMax<State, Action> {
 				// Call getMaxValue on tmpSuccessor
 				tmpMinSuccessor = getMaxValue(tmpSuccessor, null);
 			}
-
 		}
 
 		// Return minSuccessor
 		return minSuccessor;
 	}
-
 }
