@@ -30,10 +30,7 @@ public class MiniMax<State, Action> {
 		Successor<State, Action> firstSuccessor = new Successor<State, Action>(
 				state, null);
 
-		// Call getMaxValue with firstSuccessor
-		// Successor<State, Action> successor = getMaxValue(firstSuccessor,
-		// null);
-
+		// Call getBestSuccessor
 		Successor<State, Action> successor = getBestSuccessor(firstSuccessor,
 				null, true);
 
