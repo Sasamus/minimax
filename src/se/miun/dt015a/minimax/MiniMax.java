@@ -31,24 +31,20 @@ public class MiniMax<State, Action> {
 				state, null);
 
 		// Call getMaxValue with firstSuccessor
-		Successor<State, Action> successor = getMaxValue(firstSuccessor, null);
+		// Successor<State, Action> successor = getMaxValue(firstSuccessor,
+		// null);
+
+		Successor<State, Action> successor = getBestSuccessor(firstSuccessor,
+				null, true);
 
 		// Return successor.action
 		return successor.action;
 	}
 
-	/**
-	 * Get the max value for a Successor
-	 * 
-	 * @param successor
-	 *            The Successor
-	 * @param currentChoice
-	 *            The current choice
-	 * @return The Successor with max utility
-	 */
 	@SuppressWarnings("unchecked")
-	Successor<State, Action> getMaxValue(Successor<State, Action> successor,
-			Successor<State, Action> currentChoice) {
+	Successor<State, Action> getBestSuccessor(
+			Successor<State, Action> successor,
+			Successor<State, Action> currentChoice, boolean max) {
 
 		// Check if successor.state is a terminal one
 		if (game.isTerminal(successor.state)) {
@@ -61,139 +57,90 @@ public class MiniMax<State, Action> {
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
 				.getSuccessors(successor.state);
 
-		// Variables to keep track of max successors
-		Successor<State, Action> maxSuccessor = null;
-		Successor<State, Action> tmpMaxSuccessor = null;
+		// Variables to keep track of the best successors
+		Successor<State, Action> bestSuccessor = null;
+		Successor<State, Action> tmpBestSuccessor = null;
 
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
 
-			// Check if maxSuccessor equals null
-			if (maxSuccessor == null) {
+			// Check if bestSuccessor equals null
+			if (bestSuccessor == null) {
 
-				// Set maxSuccessor and tmpMaxSuccessor
-				maxSuccessor = tmpSuccessor;
-				tmpMaxSuccessor = tmpSuccessor;
+				// Set bestSuccessor and tmpBestSuccessor
+				bestSuccessor = tmpSuccessor;
+				tmpBestSuccessor = tmpSuccessor;
 			}
 
-			// Check if currentChoice is null and maxSuccessor.state is terminal
-			if (currentChoice != null && game.isTerminal(maxSuccessor.state)) {
+			// Check if currentChoice is null and bestSuccessor.state is
+			// terminal
+			if (currentChoice != null && game.isTerminal(bestSuccessor.state)) {
 
-				// Check if the rest of the successors should be pruned
-				if (game.getUtility(maxSuccessor.state) > game
-						.getUtility(currentChoice.state)) {
+				// Check if max is true
+				if (max) {
 
-					break;
+					// Check if the rest of the successors should be pruned
+					if (game.getUtility(bestSuccessor.state) > game
+							.getUtility(currentChoice.state)) {
+
+						break;
+					}
+
+				} else {
+
+					// Check if the rest of the successors should be pruned
+					if (game.getUtility(bestSuccessor.state) < game
+							.getUtility(currentChoice.state)) {
+
+						break;
+					}
 				}
 			}
 
-			// Check if maxSuccessor.state is terminal
-			if (game.isTerminal(maxSuccessor.state)) {
+			// Check if bestSuccessor.state is terminal
+			if (game.isTerminal(bestSuccessor.state)) {
 
-				// Call getMinValue on tmpSuccessor
-				tmpMaxSuccessor = getMinValue(tmpSuccessor, maxSuccessor);
+				// Call getBestSuccessor on tmpSuccessor with inverted max
+				tmpBestSuccessor = getBestSuccessor(tmpSuccessor,
+						bestSuccessor, !max);
 
-				// Check if tmpMaxSuccessor.state is terminal
-				if (game.isTerminal(tmpMaxSuccessor.state)) {
+				// Check if tmpBestSuccessor.state is terminal
+				if (game.isTerminal(tmpBestSuccessor.state)) {
 
-					// Check if tmpMaxSuccessor have more utility than
-					// maxSuccessor
-					if (game.getUtility(tmpMaxSuccessor.state) > game
-							.getUtility(maxSuccessor.state)) {
+					// Check if max is true
+					if (max) {
 
-						// If so, update maxState with tmpMaxState
-						maxSuccessor = tmpMaxSuccessor;
+						// Check if tmpBestSuccessor have more utility than
+						// bestSuccessor
+						if (game.getUtility(tmpBestSuccessor.state) > game
+								.getUtility(bestSuccessor.state)) {
+
+							// If so, update maxState with tmpMaxState
+							bestSuccessor = tmpBestSuccessor;
+						}
+
+					} else {
+
+						// Check if tmpbestSuccessor have less utility than
+						// maxSuccessor
+						if (game.getUtility(tmpBestSuccessor.state) < game
+								.getUtility(bestSuccessor.state)) {
+
+							// If so, update bestSuccessor with tmpBestSuccessor
+							bestSuccessor = tmpBestSuccessor;
+						}
 					}
 				}
 
 			} else {
 
-				// Call getMinValue on tmpSuccessor
-				tmpMaxSuccessor = getMinValue(tmpSuccessor, null);
+				// Call getBestSuccessor on tmpSuccessor with null as
+				// currentChoice and inverted max as max
+				tmpBestSuccessor = getBestSuccessor(tmpSuccessor, null, !max);
 			}
 		}
 
 		// Return maxSuccessor
-		return maxSuccessor;
-	}
-
-	/**
-	 * Get the min value for a Successor
-	 * 
-	 * @param successor
-	 *            The Successor
-	 * @param currentChoice
-	 *            The current choice
-	 * @return The Successor with min utility
-	 */
-	@SuppressWarnings("unchecked")
-	Successor<State, Action> getMinValue(Successor<State, Action> successor,
-			Successor<State, Action> currentChoice) {
-
-		// Check if successor.state is a terminal one
-		if (game.isTerminal(successor.state)) {
-
-			// If so, return successor
-			return successor;
-		}
-
-		// Get a List of successors from game
-		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
-				.getSuccessors(successor.state);
-
-		// Variables to keep track of min successors
-		Successor<State, Action> minSuccessor = null;
-		Successor<State, Action> tmpMinSuccessor = null;
-
-		// Iterate through successors
-		for (Successor<State, Action> tmpSuccessor : successors) {
-
-			// Check if minSuccessor equals null
-			if (minSuccessor == null) {
-
-				// Set minSuccessor and tmpMinSuccessor
-				minSuccessor = tmpSuccessor;
-				tmpMinSuccessor = tmpSuccessor;
-			}
-
-			// Check if currentChoice is null and minSuccessor.state is terminal
-			if (currentChoice != null && game.isTerminal(minSuccessor.state)) {
-
-				// Check if the rest of the successors should be pruned
-				if (game.getUtility(minSuccessor.state) < game
-						.getUtility(currentChoice.state)) {
-
-					break;
-				}
-			}
-
-			// Check if minSuccessor.state is terminal
-			if (game.isTerminal(minSuccessor.state)) {
-
-				// Call getMaxValue on tmpSuccessor
-				tmpMinSuccessor = getMaxValue(tmpSuccessor, minSuccessor);
-
-				// Check if tmpMinSuccessor.state is terminal
-				if (game.isTerminal(tmpMinSuccessor.state)) {
-
-					// Check if tmpMinSuccessor have less utility than
-					// minSuccessor
-					if (game.getUtility(tmpMinSuccessor.state) < game
-							.getUtility(minSuccessor.state)) {
-
-						// If so, update minSuccessor with tmpMinSuccessor
-						minSuccessor = tmpMinSuccessor;
-					}
-				}
-
-			} else {
-
-				// Call getMaxValue on tmpSuccessor
-				tmpMinSuccessor = getMaxValue(tmpSuccessor, null);
-			}
-		}
-
-		// Return minSuccessor
-		return minSuccessor;
+		return bestSuccessor;
 	}
 }
