@@ -67,7 +67,7 @@ public class MiniMax<State, Action> {
 
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
-			
+
 			// Check if maxSuccessor equals null
 			if (maxSuccessor == null) {
 
@@ -76,8 +76,8 @@ public class MiniMax<State, Action> {
 				tmpMaxSuccessor = tmpSuccessor;
 			}
 
-			// Check if currentChoice is null
-			if (currentChoice != null) {
+			// Check if currentChoice is null and maxSuccessor.state is terminal
+			if (currentChoice != null && game.isTerminal(maxSuccessor.state)) {
 
 				// Check if the rest of the successors should be pruned
 				if (game.getUtility(maxSuccessor.state) > game
@@ -89,13 +89,22 @@ public class MiniMax<State, Action> {
 
 			if (game.isTerminal(maxSuccessor.state)) {
 
-				// Check if tmpMaxSuccessor have more utility than maxSuccessor
-				if (game.getUtility(tmpMaxSuccessor.state) > game
-						.getUtility(maxSuccessor.state)) {
+				// Call getMinValue on tmpSuccessor
+				tmpMaxSuccessor = getMinValue(tmpSuccessor, maxSuccessor);
 
-					// If so, update maxState with tmpMaxState
-					maxSuccessor = tmpMaxSuccessor;
+				// Check if tmpMaxSuccessor.state is terminal
+				if (game.isTerminal(tmpMaxSuccessor.state)) {
+
+					// Check if tmpMaxSuccessor have more utility than
+					// maxSuccessor
+					if (game.getUtility(tmpMaxSuccessor.state) > game
+							.getUtility(maxSuccessor.state)) {
+
+						// If so, update maxState with tmpMaxState
+						maxSuccessor = tmpMaxSuccessor;
+					}
 				}
+
 			} else {
 
 				// Call getMinValue on tmpSuccessor
@@ -146,8 +155,8 @@ public class MiniMax<State, Action> {
 				tmpMinSuccessor = tmpSuccessor;
 			}
 
-			// Check if currentChoice is null
-			if (currentChoice != null) {
+			// Check if currentChoice is null and minSuccessor.state is terminal
+			if (currentChoice != null && game.isTerminal(minSuccessor.state)) {
 
 				// Check if the rest of the successors should be pruned
 				if (game.getUtility(minSuccessor.state) < game
@@ -162,13 +171,19 @@ public class MiniMax<State, Action> {
 				// Call getMaxValue on tmpSuccessor
 				tmpMinSuccessor = getMaxValue(tmpSuccessor, minSuccessor);
 
-				// Check if tmpMinSuccessor have less utility than minSuccessor
-				if (game.getUtility(tmpMinSuccessor.state) < game
-						.getUtility(minSuccessor.state)) {
+				// Check if tmpMinSuccessor.state is terminal
+				if (game.isTerminal(tmpMinSuccessor.state)) {
 
-					// If so, update minSuccessor with tmpMinSuccessor
-					minSuccessor = tmpMinSuccessor;
+					// Check if tmpMinSuccessor have less utility than
+					// minSuccessor
+					if (game.getUtility(tmpMinSuccessor.state) < game
+							.getUtility(minSuccessor.state)) {
+
+						// If so, update minSuccessor with tmpMinSuccessor
+						minSuccessor = tmpMinSuccessor;
+					}
 				}
+
 			} else {
 
 				// Call getMaxValue on tmpSuccessor
