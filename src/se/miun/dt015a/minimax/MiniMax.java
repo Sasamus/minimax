@@ -87,6 +87,7 @@ public class MiniMax<State, Action> {
 				}
 			}
 
+			// Check if maxSuccessor.state is terminal
 			if (game.isTerminal(maxSuccessor.state)) {
 
 				// Call getMinValue on tmpSuccessor
@@ -166,6 +167,7 @@ public class MiniMax<State, Action> {
 				}
 			}
 
+			// Check if minSuccessor.state is terminal
 			if (game.isTerminal(minSuccessor.state)) {
 
 				// Call getMaxValue on tmpSuccessor
