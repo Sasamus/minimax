@@ -26,135 +26,123 @@ public class MiniMax<State, Action> {
 		// Sets game to game
 		this.game = game;
 
-		// Create a successor that isn't actually one to be the first successor
-		Successor<State, Action> firstSuccessor = new Successor<State, Action>(
-				state, null);
+		// Holds the best value
+		double bestValue = Double.NEGATIVE_INFINITY;
 
-		// Call getBestSuccessor
-		Successor<State, Action> successor = getBestSuccessor(firstSuccessor,
-				null, 0, true);
-
-		// Return successor.action
-		return successor.action;
-	}
-
-	/**
-	 * Gets the best Successor
-	 * 
-	 * @param successor
-	 *            The Successor to start from
-	 * @param currentBestChoice
-	 *            The current best Successor
-	 * @param max
-	 *            If "Best" is max or not(min)
-	 * @return The best Successor
-	 */
-	@SuppressWarnings("unchecked")
-	Successor<State, Action> getBestSuccessor(
-			Successor<State, Action> successor,
-			Successor<State, Action> currentBestChoice,
-			int currentBestChoiceValue, boolean max) {
-
-		// Check if successor.state is a terminal one
-		if (game.isTerminal(successor.state)) {
-
-			// If so, return successor
-			return successor;
-		}
+		// Holds the best Successor
+		Successor<State, Action> bestSuccessor = null;
 
 		// Get a List of successors from game
 		ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
-				.getSuccessors(successor.state);
-
-		// Variables to keep track of the best successors
-		Successor<State, Action> bestSuccessor = null;
-		Successor<State, Action> tmpBestSuccessor = null;
-
-		int bestSuccessorValue = 0;
+				.getSuccessors(state);
 
 		// Iterate through successors
 		for (Successor<State, Action> tmpSuccessor : successors) {
 
-			// Check if bestSuccessor equals null
-			if (bestSuccessor == null) {
+			// Get alpha
+			double alpha = minMax(tmpSuccessor, bestValue,
+					Double.POSITIVE_INFINITY, false);
 
-				// Set bestSuccessor and tmpBestSuccessor
+			// Check if alpha is better than betsValue or that bestSuccessor is
+			// null
+			if (alpha > bestValue || bestSuccessor == null) {
+
+				// Set bestSuccessor tp tmpSuccessor
 				bestSuccessor = tmpSuccessor;
-				tmpBestSuccessor = tmpSuccessor;
 
-			}
-			// Check if bestSuccessor.state is terminal
-			else if (game.isTerminal(bestSuccessor.state)) {
-
-				bestSuccessorValue = game.getUtility(bestSuccessor.state);
-			}
-
-			// Check if currentChoice is null and bestSuccessor.state is
-			// terminal
-			if (currentBestChoice != null
-					&& game.isTerminal(bestSuccessor.state)) {
-
-				// Check if max is true
-				if (max) {
-
-					// Check if the rest of the successors should be pruned
-					if (bestSuccessorValue > currentBestChoiceValue) {
-
-						break;
-					}
-
-				} else {
-
-					// Check if the rest of the successors should be pruned
-					if (bestSuccessorValue < currentBestChoiceValue) {
-
-						break;
-					}
-				}
-			}
-
-			// Check if bestSuccessor.state is terminal
-			if (game.isTerminal(bestSuccessor.state)) {
-
-				// Call getBestSuccessor on tmpSuccessor with inverted max
-				tmpBestSuccessor = getBestSuccessor(tmpSuccessor,
-						bestSuccessor, bestSuccessorValue, !max);
-
-				// Check if tmpBestSuccessor.state is terminal
-				if (game.isTerminal(tmpBestSuccessor.state)) {
-
-					// Check if max is true
-					if (max) {
-
-						// Check if tmpBestSuccessor have more utility than
-						// bestSuccessor
-						if (bestSuccessorValue > currentBestChoiceValue) {
-
-							// If so, update maxState with tmpMaxState
-							bestSuccessor = tmpBestSuccessor;
-						}
-
-					} else {
-
-						// Check if tmpbestSuccessor have less utility than
-						// maxSuccessor
-						if (bestSuccessorValue < currentBestChoiceValue) {
-
-							// If so, update bestSuccessor with tmpBestSuccessor
-							bestSuccessor = tmpBestSuccessor;
-						}
-					}
-				}
-
-			} else {
-
-				// Call getBestSuccessor on tmpSuccessor with null as
-				// currentChoice and inverted max as max
-				tmpBestSuccessor = getBestSuccessor(tmpSuccessor, null, 0, !max);
+				// Set bestValue to alpha
+				bestValue = alpha;
 			}
 		}
 
-		// Return bestSuccessor
-		return bestSuccessor;
+		// Return bestSuccessors action
+		return bestSuccessor.action;
+	}
+
+	/**
+	 * Returns the best utility value
+	 * 
+	 * @param node
+	 *            The node to originate from
+	 * @param alpha
+	 *            The current best Max value
+	 * @param beta
+	 *            The current best Min value
+	 * @param max
+	 *            True if looking for Max else false
+	 * @return The utility value of the best Successor
+	 */
+	@SuppressWarnings("unchecked")
+	double minMax(Successor<State, Action> node, double alpha, double beta,
+			boolean max) {
+
+		// Check if nodes state is terminal
+		if (game.isTerminal(node.state)) {
+
+			// If so, return it's utility
+			return game.getUtility(node.state);
+		}
+
+		// Check if max is true
+		if (max) {
+
+			// Create and set newAlpha
+			double newAlpha = Double.NEGATIVE_INFINITY;
+
+			// Get a List of successors from game
+			ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
+					.getSuccessors(node.state);
+
+			// Iterate through successors
+			for (Successor<State, Action> tmpSuccessor : successors) {
+
+				// Set newAlpha with the max of newAlpha and minMax with false
+				newAlpha = Math.max(newAlpha,
+						minMax(tmpSuccessor, alpha, beta, false));
+
+				// Set alpha with the max of newAlpha and alpha
+				alpha = Math.max(newAlpha, alpha);
+
+				// Check if alpha is better than beta
+				if (alpha >= beta) {
+
+					// Return alpha
+					return alpha;
+				}
+			}
+
+			// Return newAlpha
+			return newAlpha;
+
+		} else {
+
+			// Create and set newBeta
+			double newBeta = Double.POSITIVE_INFINITY;
+
+			// Get a List of successors from game
+			ArrayList<Successor<State, Action>> successors = (ArrayList<Successor<State, Action>>) game
+					.getSuccessors(node.state);
+
+			// Iterate through successors
+			for (Successor<State, Action> tmpSuccessor : successors) {
+
+				// Set newBeta with the min of newBeta and minMax with true
+				newBeta = Math.min(newBeta,
+						minMax(tmpSuccessor, alpha, beta, true));
+
+				// Set beta with the min of newBeta and beta
+				beta = Math.min(newBeta, beta);
+
+				// Check if alpha is better than beta
+				if (alpha >= beta) {
+
+					// Return beta
+					return beta;
+				}
+			}
+
+			// Return newBeta
+			return newBeta;
+		}
 	}
 }
