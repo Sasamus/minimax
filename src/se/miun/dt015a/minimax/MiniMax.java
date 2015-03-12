@@ -38,6 +38,17 @@ public class MiniMax<State, Action> {
 		return successor.action;
 	}
 
+	/**
+	 * Gets the best Successor
+	 * 
+	 * @param successor
+	 *            The Successor to start from
+	 * @param currentChoice
+	 *            The current best Successor
+	 * @param max
+	 *            If "Best" is max or not(min)
+	 * @return The best Successort
+	 */
 	@SuppressWarnings("unchecked")
 	Successor<State, Action> getBestSuccessor(
 			Successor<State, Action> successor,
