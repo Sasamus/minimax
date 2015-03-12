@@ -47,7 +47,7 @@ public class MiniMax<State, Action> {
 	 *            The current best Successor
 	 * @param max
 	 *            If "Best" is max or not(min)
-	 * @return The best Successort
+	 * @return The best Successor
 	 */
 	@SuppressWarnings("unchecked")
 	Successor<State, Action> getBestSuccessor(
