@@ -82,8 +82,9 @@ public class MiniMax<State, Action> {
 				bestSuccessor = tmpSuccessor;
 				tmpBestSuccessor = tmpSuccessor;
 
-				// Check if bestSuccessor.state is terminal
-			} else if (game.isTerminal(bestSuccessor.state)) {
+			}
+			// Check if bestSuccessor.state is terminal
+			else if (game.isTerminal(bestSuccessor.state)) {
 
 				bestSuccessorValue = game.getUtility(bestSuccessor.state);
 			}
