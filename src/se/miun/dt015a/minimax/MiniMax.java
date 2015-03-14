@@ -9,6 +9,9 @@ import java.util.ArrayList;
  */
 public class MiniMax<State, Action> {
 
+	/**
+	 * Holds the Game
+	 */
 	@SuppressWarnings("rawtypes")
 	private Game game;
 
